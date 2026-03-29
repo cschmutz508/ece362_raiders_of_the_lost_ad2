@@ -1,4 +1,4 @@
-# ece362_raiders_of_the_lost_ad2
+# ECE36200 Raiders of the Lost AD2
 
 ---
 
