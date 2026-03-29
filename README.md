@@ -1,6 +1,6 @@
 # ece362_raiders_of_the_lost_ad2
 
-# Embedded Systems Project
+---
 
 ## Overview
 This project involves the design and implementation of a multifunction embedded system featuring signal generation, signal analysis, display interfacing, and data storage capabilities. The system is being developed with a custom PCB and modular firmware architecture.
