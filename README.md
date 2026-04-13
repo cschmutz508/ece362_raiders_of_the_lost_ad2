@@ -35,4 +35,9 @@ This project involves the design and implementation of a multifunction embedded 
 
 ## Notes
 - Responsibilities may evolve as development progresses  
-- Integration between modules will be a key focus after initial feature implementation  
+- Integration between modules will be a key focus after initial feature implementation
+
+---
+
+## Schematic
+<img width="1818" height="1237" alt="image" src="https://github.com/user-attachments/assets/c940a8bf-fa36-4674-bce9-17871f927ec5" />
