@@ -1,11 +1,9 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
-<<<<<<< HEAD
-#include "wavegen.h"
-=======
 #include "fra.h"
->>>>>>> f2f7207f0e34f4b8b8a8a53bfc167ac4bfe0ffec
+#include "oscilloscope.h"
+#include "wavegen.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -99,6 +97,16 @@ int main() {
     if (fra_run_sweep(&cfg, points, 40, &count, NULL)) {
         // points[0..count-1] now contains the sweep results
         // draw them, save them, etc.
+    }
+
+    uint16_t probe1[256];
+    uint16_t probe2[256];
+    scope_stats_t stats1;
+
+    scope_init();
+
+    if (scope_capture_dual_raw_dma(probe1, probe2, 256, 10000)) {
+        scope_calculate_stats(probe1, 256, &stats1);
     }
 
     for(;;);
