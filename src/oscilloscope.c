@@ -9,16 +9,16 @@
 
 #include "oscilloscope.h"
 
-#define SCOPE_PROBE1_GPIO      43u
-#define SCOPE_PROBE2_GPIO      44u
-#define SCOPE_ADC_REF_VOLTAGE  3.3f
-#define SCOPE_ADC_MAX_COUNTS   4095.0f
-#define SCOPE_ADC_REF_VOLTAGE  3.3f
-#define SCOPE_MIN_SAMPLE_RATE  1u
-#define SCOPE_MAX_SAMPLE_RATE  200000u
-#define SCOPE_ADC_CLK_HZ       48000000.0f
-#define SCOPE_MIN_SAMPLE_RATE  100u
-#define SCOPE_MAX_SAMPLE_RATE  500000u
+#define SCOPE_PROBE1_GPIO 43u
+#define SCOPE_PROBE2_GPIO 44u
+#define SCOPE_ADC_REF_VOLTAGE 3.3f
+#define SCOPE_ADC_MAX_COUNTS 4095.0f
+#define SCOPE_ADC_REF_VOLTAGE 3.3f
+#define SCOPE_MIN_SAMPLE_RATE 1u
+#define SCOPE_MAX_SAMPLE_RATE 200000u
+#define SCOPE_ADC_CLK_HZ 48000000.0f
+#define SCOPE_MIN_SAMPLE_RATE 100u
+#define SCOPE_MAX_SAMPLE_RATE 500000u
 
 static bool g_scope_initialized;
 static int g_scope_dma_chan = -1;
