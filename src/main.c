@@ -1,7 +1,11 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
+<<<<<<< HEAD
 #include "wavegen.h"
+=======
+#include "fra.h"
+>>>>>>> f2f7207f0e34f4b8b8a8a53bfc167ac4bfe0ffec
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -84,30 +88,23 @@ int main() {
 
     LCD_DrawString(20, 20, WHITE, BLACK, "Hello World", 12, 1);
 
+    fra_sweep_cfg_t cfg;
+    fra_point_t points[40];
+    uint16_t count = 0;
+
+    // your normal board init here
+    fra_init();
+
+    fra_get_default_sweep_cfg(&cfg);
+
+    if (fra_run_sweep(&cfg, points, 40, &count, NULL)) {
+        // points[0..count-1] now contains the sweep results
+        // draw them, save them, etc.
+    }
+
     for(;;);
 
-    wavegen_init();
-
-    // Demo: set channel 0 to 25% duty cycle
-    wavegen_set_percent(0, 25.0f);
-
-    sleep_ms(1000);
-
-    // Demo: set channel 0 to 50% duty cycle
-    wavegen_set_percent(0, 50.0f);
-
-    sleep_ms(1000);
-
-    // Demo: set channel 0 to 75% duty cycle
-    wavegen_set_percent(0, 75.0f);
-
-    sleep_ms(1000);
-
-    // Switch channel 1 into sine wave mode at 1 kHz
-    wavegen_set_sine_mode(1, 1000.0f);
-
-    while (1) {
-    }
+   
 }
 
 
