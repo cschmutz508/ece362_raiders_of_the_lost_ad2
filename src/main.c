@@ -1,6 +1,7 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
+#include "fra.c"
 #include "fra.h"
 #include <stdio.h>
 #include <math.h>
@@ -83,6 +84,20 @@ int main() {
     LCD_Clear(0x0000); // Clear the screen to black
 
     LCD_DrawString(20, 20, WHITE, BLACK, "Hello World", 12, 1);
+
+    fra_sweep_cfg_t cfg;
+    fra_point_t points[40];
+    uint16_t count = 0;
+
+    // your normal board init here
+    fra_init();
+
+    fra_get_default_sweep_cfg(&cfg);
+
+    if (fra_run_sweep(&cfg, points, 40, &count, NULL)) {
+        // points[0..count-1] now contains the sweep results
+        // draw them, save them, etc.
+    }
 
     for(;;);
 }
