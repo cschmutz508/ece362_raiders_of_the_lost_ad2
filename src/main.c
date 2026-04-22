@@ -86,18 +86,18 @@ int main() {
 
     LCD_DrawString(20, 20, WHITE, BLACK, "Hello World", 12, 1);
 
-    fra_sweep_cfg_t cfg;
-    fra_point_t points[40];
-    uint16_t count = 0;
+    //fra_sweep_cfg_t cfg;
+    //fra_point_t points[40];
+    //uint16_t count = 0;
 
-    fra_init();
+    //fra_init();
 
-    fra_get_default_sweep_cfg(&cfg);
+    //fra_get_default_sweep_cfg(&cfg);
 
-    if (fra_run_sweep(&cfg, points, 40, &count, NULL)) {
+    //if (fra_run_sweep(&cfg, points, 40, &count, NULL)) {
         // points[0..count-1] now contains the sweep results
         // draw them, save them, etc.
-    }
+    //}
 
     uint16_t probe1[256];
     uint16_t probe2[256];
