@@ -1,9 +1,8 @@
 #include <math.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <string.h>
 
+#include "fra.h"
 #include "hardware/adc.h"
 #include "hardware/clocks.h"
 #include "hardware/gpio.h"
@@ -14,50 +13,25 @@
 #define FRA_PI 3.14159265358979323846f
 #endif
 
-#define FRA_PWM_PIN_A               28u
-#define FRA_PWM_PIN_B               30u
-#define FRA_PROBE_1_GPIO            43u
-#define FRA_PROBE_2_GPIO            44u
+#define FRA_PWM_PIN_A 28u
+#define FRA_PWM_PIN_B 30u
+#define FRA_PROBE_1_GPIO 43u
+#define FRA_PROBE_2_GPIO 44u
 
-#define FRA_PWM_WRAP                1023u
-#define FRA_PWM_CENTER              (FRA_PWM_WRAP / 2u)
-#define FRA_DEFAULT_PWM_CARRIER_HZ  200000u
-#define FRA_DEFAULT_BIAS_MV         1650u
-#define FRA_DEFAULT_AMPLITUDE_MV    600u
-#define FRA_ADC_MAX_COUNTS          4095.0f
-#define FRA_ADC_REF_VOLTAGE         3.3f
-#define FRA_MIN_SAMPLES_PER_CYCLE   24u
-#define FRA_MAX_SAMPLES_PER_CYCLE   192u
-#define FRA_MIN_SETTLE_CYCLES       4u
-#define FRA_MIN_MEASURE_CYCLES      8u
-#define FRA_MAX_SWEEP_POINTS        256u
-#define FRA_MIN_OUTPUT_FREQ_HZ      1.0f
-#define FRA_EPSILON                 1.0e-9f
-
-typedef struct {
-    float frequency_hz;
-    float input_vpp;
-    float output_vpp;
-    float gain_db;
-    float phase_deg;
-    float input_dc_v;
-    float output_dc_v;
-} fra_point_t;
-
-typedef struct {
-    float start_hz;
-    float stop_hz;
-    uint16_t points;
-    uint16_t samples_per_cycle;
-    uint16_t settle_cycles;
-    uint16_t measure_cycles;
-    uint32_t output_bias_mv;
-    uint32_t output_amplitude_mv;
-    bool logarithmic;
-    bool drive_both_outputs;
-} fra_sweep_cfg_t;
-
-typedef bool (*fra_abort_cb_t)(void);
+#define FRA_PWM_WRAP 1023u
+#define FRA_PWM_CENTER (FRA_PWM_WRAP / 2u)
+#define FRA_DEFAULT_PWM_CARRIER_HZ 200000u
+#define FRA_DEFAULT_BIAS_MV 1650u
+#define FRA_DEFAULT_AMPLITUDE_MV 600u
+#define FRA_ADC_MAX_COUNTS 4095.0f
+#define FRA_ADC_REF_VOLTAGE 3.3f
+#define FRA_MIN_SAMPLES_PER_CYCLE 24u
+#define FRA_MAX_SAMPLES_PER_CYCLE 192u
+#define FRA_MIN_SETTLE_CYCLES 4u
+#define FRA_MIN_MEASURE_CYCLES 8u
+#define FRA_MAX_SWEEP_POINTS 256u
+#define FRA_MIN_OUTPUT_FREQ_HZ 1.0f
+#define FRA_EPSILON 1.0e-9f
 
 typedef struct {
     float re;
