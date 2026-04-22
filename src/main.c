@@ -88,7 +88,6 @@ int main() {
     fra_point_t points[40];
     uint16_t count = 0;
 
-    // your normal board init here
     fra_init();
 
     fra_get_default_sweep_cfg(&cfg);
