@@ -9,10 +9,10 @@ This project involves the design and implementation of a multifunction embedded 
 
 ## Objectives: 
 
--An ability to use PWM to simulate a function generator.
--An ability to use ADC to convert analog data into a digital reading that can be displayed on our TFT display..
--An ability to use spi to display waves with TFT display.
--An ability to use spi to an sd card for exporting data.
+An ability to use PWM to simulate a function generator.
+An ability to use ADC to convert analog data into a digital reading that can be displayed on our TFT display..
+An ability to use spi to display waves with TFT display.
+An ability to use spi to an sd card for exporting data.
 
 ---
 
