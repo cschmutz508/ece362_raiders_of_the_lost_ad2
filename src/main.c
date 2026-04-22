@@ -1,6 +1,7 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
+#include "wavegen.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -84,6 +85,29 @@ int main() {
     LCD_DrawString(20, 20, WHITE, BLACK, "Hello World", 12, 1);
 
     for(;;);
+
+    wavegen_init();
+
+    // Demo: set channel 0 to 25% duty cycle
+    wavegen_set_percent(0, 25.0f);
+
+    sleep_ms(1000);
+
+    // Demo: set channel 0 to 50% duty cycle
+    wavegen_set_percent(0, 50.0f);
+
+    sleep_ms(1000);
+
+    // Demo: set channel 0 to 75% duty cycle
+    wavegen_set_percent(0, 75.0f);
+
+    sleep_ms(1000);
+
+    // Switch channel 1 into sine wave mode at 1 kHz
+    wavegen_set_sine_mode(1, 1000.0f);
+
+    while (1) {
+    }
 }
 
 
