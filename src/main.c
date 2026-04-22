@@ -1,7 +1,11 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
+<<<<<<< HEAD
+#include "wavegen.h"
+=======
 #include "fra.h"
+>>>>>>> f2f7207f0e34f4b8b8a8a53bfc167ac4bfe0ffec
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -98,6 +102,8 @@ int main() {
     }
 
     for(;;);
+
+   
 }
 
 
