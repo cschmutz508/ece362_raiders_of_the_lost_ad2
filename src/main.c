@@ -1,13 +1,16 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
-#include "fra.h"
+//#include "fra.h"
 #include "oscilloscope.h"
 #include "wavegen.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "screen_export.h"
+#include "sdcard.h"
+#include "ff.h"
 
 //////////////////////////////////////////////////////////////////////////
 

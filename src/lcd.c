@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "lcd.h"
+#include "screen_export.h"
 
 void nano_wait(int t);
 
@@ -15,7 +16,7 @@ lcd_dev_t lcddev;
 
 spi_inst_t *SPI = spi1; // Use SPI1 for the LCD
 
-#define CS_NUM 13
+#define CS_NUM  13
 #define DC_NUM 12
 #define RESET_NUM 11
 
@@ -317,6 +318,7 @@ void LCD_SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEn
 //===========================================================================
 void LCD_Clear(u16 Color)
 {
+    fb_clear(Color);
     lcddev.select(1);
     unsigned int i,m;
     LCD_SetWindow(0,0,lcddev.width-1,lcddev.height-1);
@@ -337,6 +339,7 @@ void LCD_Clear(u16 Color)
 //===========================================================================
 static void _LCD_DrawPoint(u16 x, u16 y, u16 c)
 {
+    fb_set_pixel(x,y,c);
     LCD_SetWindow(x,y,x,y);
     LCD_WriteData16_Prepare();
     LCD_WriteData16(c);
@@ -898,4 +901,13 @@ void LCD_DrawPicture(u16 x0, u16 y0, const Picture *pic)
 
     LCD_WriteData16_End();
     lcddev.select(0);
+
+    pixel_ptr = (u16 *)pic->pixel_data;
+    for (u16 dy = 0; dy < (u16)pic->height; dy++) 
+    {
+        for (u16 dx = 0; dx < (u16)pic->width; dx++)
+        {
+            fb_set_pixel(x0 + dx, y0 + dy, *pixel_ptr++);
+        }
+    }
 }

@@ -8,8 +8,8 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/include",
                 "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/src",
+                "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/include",
                 "C:/Users/rapha/.platformio/packages/framework-picosdk/generated",
                 "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/.pio/build/proton/generated",
                 "C:/Users/rapha/.platformio/packages/framework-picosdk/src/boards/include",
@@ -178,8 +178,8 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/include",
                     "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/src",
+                    "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/include",
                     "C:/Users/rapha/.platformio/packages/framework-picosdk/generated",
                     "C:/Users/rapha/OneDrive/Documents/36200/ece362_raiders_of_the_lost_ad2/.pio/build/proton/generated",
                     "C:/Users/rapha/.platformio/packages/framework-picosdk/src/boards/include",
