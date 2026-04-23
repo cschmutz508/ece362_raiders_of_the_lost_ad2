@@ -32,6 +32,9 @@ typedef struct {
     float ch1_offset;
     float ch2_offset;
 
+    uint8_t ch1_en;
+    uint8_t ch2_en;
+
     uint8_t run_mode;
     uint8_t menu_mode;
 
@@ -45,7 +48,9 @@ ScopeState scope = {
     .time_per_div = 500e-6f,
     .ch1_offset = 0.0f,
     .ch2_offset = 0.0f,
-    .run_mode = 1,
+    .run_mode = 0,
+    .ch1_en = 0,
+    .ch2_en = 0,
     .menu_mode = 1,
     .redraw_ui = 1,
     .redraw_waveform = 1
@@ -187,13 +192,17 @@ void handle_wavegen_key(char key) {
             if (wg.ch2_on) wavegen_set_sine_mode(1, wg.freq_ch2);
             break;
         default:
-            break;
+            screen_state = SCOPE;
+            LCD_Clear(0x0000);
+            dispInit();
+            draw_menu();
+            return;
     }
     draw_wavegen_screen();
 }
 void handle_key(char key)
 {
-     if (screen_state == WAVEGEN) {
+    if (screen_state == WAVEGEN) {
         handle_wavegen_key(key);
         return;
     }
@@ -202,6 +211,19 @@ void handle_key(char key)
     if (screen_state == IDLE) {
         screen_state = SCOPE;
         return;
+    }
+
+    if (key == '3' && screen_state == SCOPE_CHA) {
+        scope.ch1_en ^= 1;
+        if (scope.ch1_en == 0) {
+            LCD_DrawFillRectangle(X0+1, 90, X0+WIDTH, 103, BLACK);
+        }
+    }
+    if (key == '3' && screen_state == SCOPE_CHB) {
+        scope.ch2_en ^= 1;
+        if (scope.ch2_en == 0) {
+            LCD_DrawFillRectangle(X0+1, 105, X0+WIDTH, 117, BLACK);
+        }
     }
 
     for (int i = 0; i < menu->item_count; i++)
@@ -267,12 +289,14 @@ int main() {
     init_keypad();
     init_spi_lcd();
     wavegen_init();
+    scope_init();
 
     LCD_Setup();
     LCD_Clear(0x0000);
 
     generateTestWaveform();
-    dispFunc(waveform, 2048.0f, 800.0f, ORANGE);
+    dispFunc(waveform, 2400.0f, 800.0f, ORANGE);
+    dispFunc(waveform, 1600.0f, 1000.0f, GRAYBLUE);
 
     dispInit();
     draw_menu();
@@ -322,6 +346,22 @@ int main() {
             FRESULT result_bmp = export_bmp("SCREEN.BMP");
             FRESULT result_csv = export_csv("SCREEN.CSV");
             screen_state = SCOPE;
+        }
+
+        if (screen_state != WAVEGEN && scope.run_mode) {
+            char buf[48];
+            if (scope.ch1_en) {
+                float v1 = scope_read_voltage(SCOPE_CHANNEL_PROBE1);
+                snprintf(buf, sizeof(buf), "CH1: %.3f V", v1);
+                LCD_DrawFillRectangle(X0, 90, X0+WIDTH, 103, BLACK);
+                LCD_DrawString(X0 + 15, 90, ORANGE, BLACK, buf, 12, 1);
+            }
+            if (scope.ch2_en) {
+                float v2 = scope_read_voltage(SCOPE_CHANNEL_PROBE2);
+                snprintf(buf, sizeof(buf), "CH2: %.3f V", v2);
+                LCD_DrawFillRectangle(X0, 105, X0+WIDTH, 118, BLACK);
+                LCD_DrawString(X0 + 15, 105, GRAYBLUE, BLACK, buf, 12, 1);
+            }
         }
     }
 }
