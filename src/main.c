@@ -52,6 +52,9 @@ const int COL0 = 40;
 const int OSC_PROBE1 = 43;
 const int OSC_PROBE2 = 44;
 
+void run_scope_uart_test(void);
+
+
 //////////////////////////////////////////////////////////////////////////
 
 void init_spi_lcd() {
@@ -99,15 +102,17 @@ int main() {
         // draw them, save them, etc.
     //}
 
-    uint16_t probe1[256];
-    uint16_t probe2[256];
-    scope_stats_t stats1;
+    run_scope_uart_test();
 
-    scope_init();
+    //uint16_t probe1[256];
+    //uint16_t probe2[256];
+    //scope_stats_t stats1;
 
-    if (scope_capture_dual_raw_dma(probe1, probe2, 256, 10000)) {
-        scope_calculate_stats(probe1, 256, &stats1);
-    }
+    //scope_init();
+
+    //if (scope_capture_dual_raw_dma(probe1, probe2, 256, 10000)) {
+    //    scope_calculate_stats(probe1, 256, &stats1);
+    //}
 
     for(;;);
 
