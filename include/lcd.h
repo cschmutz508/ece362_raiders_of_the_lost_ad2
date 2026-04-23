@@ -39,7 +39,7 @@ extern lcd_dev_t lcddev;
 // 1: rotate: 90
 // 2: rotate: 180
 // 3: rotate 270
-#define USE_HORIZONTAL       0
+#define USE_HORIZONTAL       1
 
 // The dimensions of the display.
 #define LCD_W 240
@@ -66,6 +66,7 @@ extern lcd_dev_t lcddev;
 #define LGRAY       0XC618
 #define LGRAYBLUE   0XA651
 #define LBBLUE      0X2B12
+#define ORANGE      0xFD20
 
 void LCD_Setup(void);
 void LCD_Init(void (*reset)(int), void (*select)(int), void (*reg_select)(int));
