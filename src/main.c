@@ -1,7 +1,7 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "lcd.h"
-#include "fra.h"
+//#include "fra.h"
 #include "oscilloscope.h"
 #include "wavegen.h"
 #include <stdio.h>

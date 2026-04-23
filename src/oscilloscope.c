@@ -31,7 +31,7 @@ static uint scope_channel_to_gpio(scope_channel_t channel) {
 }
 
 static uint scope_channel_to_adc_input(scope_channel_t channel) {
-    return adc_gpio_to_input(scope_channel_to_gpio(channel));
+    return adc_input(scope_channel_to_gpio(channel));
 }
 
 static void scope_configure_single_channel(scope_channel_t channel) {
