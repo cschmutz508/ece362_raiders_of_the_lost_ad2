@@ -8,6 +8,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "screen_export.h"
+#include "sdcard.h"
+#include "ff.h"
 
 //////////////////////////////////////////////////////////////////////////
 
