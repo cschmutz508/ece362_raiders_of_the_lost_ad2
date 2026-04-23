@@ -29,7 +29,7 @@ Menu menu_scope = {
     .items = {
         {'1', "Wavegen",      WAVEGEN,       true},
         {'2', "Measurements", SCOPE_MEASURE, true},
-        {'3', "Export",       SCOPE_EXPORT,  true},
+        {'3', "Export",       SCOPE_EXPORT_CONFIRM,  true},
         {'A', "Zafeer",       SCOPE_CHA,     false},
         {'B', "Carman",       SCOPE_CHB,     false}
     },
@@ -74,11 +74,22 @@ Menu menu_scope_measure_chb = {
 Menu menu_scope_export = {
     .title = "Export",
     .items = {
-        {'1', "i aint write ts yet", SCOPE, true},
+        {'I', "Wait", SCOPE, true},
         {'A', "Zafeer",              SCOPE_CHA, false},
         {'B', "Carman",              SCOPE_CHB, false}
     },
     .item_count = 3
+};
+
+Menu menu_scope_export_confirm = {
+    .title = "Export Confirm",
+    .items = {
+        {'1', "CSV", SCOPE_EXPORT, true},
+        {'2', "Image", SCOPE_EXPORT, true},
+        {'A', "Rapha is a good goy", SCOPE_CHA, false},
+        {'B', "Carman",              SCOPE_CHB, false}
+    },
+    .item_count = 4
 };
 
 Menu menu_scope_cha = {
@@ -117,6 +128,7 @@ Menu *menu_table[] = {
     [SCOPE_MEASURE]     = &menu_scope_measure,
     [SCOPE_MEASURE_CHA] = &menu_scope_measure_cha,
     [SCOPE_MEASURE_CHB] = &menu_scope_measure_chb,
+    [SCOPE_EXPORT_CONFIRM] = &menu_scope_export_confirm,
     [SCOPE_EXPORT]      = &menu_scope_export,
     [SCOPE_CHA]         = &menu_scope_cha,
     [SCOPE_CHB]         = &menu_scope_chb,

@@ -28,6 +28,7 @@ typedef enum {
     SCOPE_MEASURE_CHA,
     SCOPE_MEASURE_CHB,
     SCOPE_EXPORT,
+    SCOPE_EXPORT_CONFIRM,
     SCOPE_CHA,
     SCOPE_CHB,
     WAVEGEN
@@ -51,6 +52,7 @@ extern Menu menu_scope;
 extern Menu menu_scope_measure;
 extern Menu menu_scope_measure_cha;
 extern Menu menu_scope_measure_chb;
+extern Menu menu_scope_export_confirm;
 extern Menu menu_scope_export;
 extern Menu menu_scope_cha;
 extern Menu menu_scope_chb;

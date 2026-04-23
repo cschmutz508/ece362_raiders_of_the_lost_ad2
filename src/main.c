@@ -208,6 +208,9 @@ int main() {
     dispInit();
     draw_menu();
 
+    char *mount_argv[] = {"mount"};
+    mount(1, mount_argv);
+
     char prev_key = '\0';
 
     while (1) {
@@ -231,5 +234,11 @@ int main() {
         }
 
         prev_key = found;
+
+        if (screen_state == SCOPE_EXPORT) {
+            FRESULT result_bmp = export_bmp("SCREEN.BMP");
+            FRESULT result_csv = export_csv("SCREEN.CSV");
+            screen_state = SCOPE;
+        }
     }
 }
