@@ -13,6 +13,7 @@
 #include "ff.h"
 #include "display.h"
 
+
 //////////////////////////////////////////////////////////////////////////
 
 // const char keymap[16] = "DCBA#9630852*741";
@@ -48,6 +49,20 @@ ScopeState scope = {
     .menu_mode = 1,
     .redraw_ui = 1,
     .redraw_waveform = 1
+};
+
+typedef struct {
+    float freq_ch1;
+    float freq_ch2;
+    uint8_t ch1_on;
+    uint8_t ch2_on;
+} WavegenState;
+
+WavegenState wg = {
+    .freq_ch1 = 1000.0f,
+    .freq_ch2 = 1000.0f,
+    .ch1_on = 0,
+    .ch2_on = 0
 };
 
 // sd card --> spi0
@@ -127,8 +142,61 @@ void init_keypad() {
     }
 }
 
+void draw_wavegen_screen() {
+    LCD_DrawFillRectangle(0, 20, 320, 210, BLACK);
+    char buf[64];
+    LCD_DrawString(20, 30, WHITE, BLACK, "== Wavegen ==", 12, 1);
+    snprintf(buf, sizeof(buf), "CH1: %s  %.1f Hz", wg.ch1_on ? "ON " : "OFF", wg.freq_ch1);
+    LCD_DrawString(20, 50, wg.ch1_on ? GREEN : RED, BLACK, buf, 12, 1);
+    snprintf(buf, sizeof(buf), "CH2: %s  %.1f Hz", wg.ch2_on ? "ON " : "OFF", wg.freq_ch2);
+    LCD_DrawString(20, 70, wg.ch2_on ? GREEN : RED, BLACK, buf, 12, 1);
+    LCD_DrawString(20, 100, GRAYBLUE, BLACK, "(2) Toggle CH1", 12, 1);
+    LCD_DrawString(20, 115, GRAYBLUE, BLACK, "(3) Toggle CH2", 12, 1);
+    LCD_DrawString(20, 130, GRAYBLUE, BLACK, "(4) CH1 freq up x10", 12, 1);
+    LCD_DrawString(20, 145, GRAYBLUE, BLACK, "(5) CH1 freq dn x10", 12, 1);
+    LCD_DrawString(20, 160, GRAYBLUE, BLACK, "(6) CH2 freq up x10", 12, 1);
+    LCD_DrawString(20, 175, GRAYBLUE, BLACK, "(7) CH2 freq dn x10", 12, 1);
+}
+
+void handle_wavegen_key(char key) {
+    switch (key) {
+        case '2':
+            wg.ch1_on ^= 1;
+            if (wg.ch1_on) wavegen_set_sine_mode(0, wg.freq_ch1);
+            else            wavegen_stop(0);
+            break;
+        case '3':
+            wg.ch2_on ^= 1;
+            if (wg.ch2_on) wavegen_set_sine_mode(1, wg.freq_ch2);
+            else            wavegen_stop(1);
+            break;
+        case '4':
+            wg.freq_ch1 = fminf(wg.freq_ch1 * 10.0f, 20000.0f);
+            if (wg.ch1_on) wavegen_set_sine_mode(0, wg.freq_ch1);
+            break;
+        case '5':
+            wg.freq_ch1 = fmaxf(wg.freq_ch1 / 10.0f, 1.0f);
+            if (wg.ch1_on) wavegen_set_sine_mode(0, wg.freq_ch1);
+            break;
+        case '6':
+            wg.freq_ch2 = fminf(wg.freq_ch2 * 10.0f, 20000.0f);
+            if (wg.ch2_on) wavegen_set_sine_mode(1, wg.freq_ch2);
+            break;
+        case '7':
+            wg.freq_ch2 = fmaxf(wg.freq_ch2 / 10.0f, 1.0f);
+            if (wg.ch2_on) wavegen_set_sine_mode(1, wg.freq_ch2);
+            break;
+        default:
+            break;
+    }
+    draw_wavegen_screen();
+}
 void handle_key(char key)
 {
+     if (screen_state == WAVEGEN) {
+        handle_wavegen_key(key);
+        return;
+    }
     Menu *menu = menu_table[screen_state];
 
     if (screen_state == IDLE) {
@@ -198,6 +266,7 @@ int main() {
 
     init_keypad();
     init_spi_lcd();
+    wavegen_init();
 
     LCD_Setup();
     LCD_Clear(0x0000);
@@ -225,6 +294,20 @@ int main() {
             }
             gpio_put(COL1 - i, false);
         }
+
+        ScreenState old_state = screen_state;  // save before handle_key
+
+        if (found != '\0' && prev_key == '\0') {
+            printf("key: %c\n", found);
+            handle_key(found);
+            if (screen_state == WAVEGEN && old_state != WAVEGEN) {
+                LCD_DrawFillRectangle(0, 0, 320, 240, BLACK);
+                draw_wavegen_screen();
+            } else if (screen_state != WAVEGEN) {
+                draw_menu();
+            }
+        }
+        prev_key = found;
 
         // rising edge: key newly pressed (wasn't pressed before, is now)
         if (found != '\0' && prev_key == '\0') {
