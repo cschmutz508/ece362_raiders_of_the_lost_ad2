@@ -6,26 +6,25 @@
  *
  * Shadow framebuffer + SD card export module.
  *
- * The ILI9341 LCD is write-only over SPI, so we maintain a 240x320 16-bit
- * (RGB565) shadow framebuffer in RAM that mirrors every pixel written to the
- * display.  When an export is triggered, this buffer is the data source.
+ * The ILI9341 LCD is write-only over SPI, so we maintain a shadow
+ * framebuffer in RAM that mirrors every pixel written to the display.
  *
- * Two export formats are supported:
- *   - BMP  : 24-bit uncompressed Windows BMP, readable on any OS.
- *   - CSV  : comma-separated "x,y,r,g,b" rows, one per pixel.
+ * IMPORTANT — orientation:
+ *   The display can run in portrait (240×320) or landscape (320×240)
+ *   depending on USE_HORIZONTAL in lcd.h / lcd.c.  Your project uses
+ *   coordinates up to x=310, confirming landscape mode (lcddev.width=320,
+ *   lcddev.height=240).  The framebuffer is sized for the worst case
+ *   (320×320) and the actual active region is read from lcddev at runtime.
  *
- * RAM cost of the framebuffer:
- *   240 * 320 * 2 bytes = 153,600 bytes (~150 KB)
- * The RP2350 has 520 KB of SRAM, so this is feasible.
+ * RAM cost: 320 * 320 * 2 = 204,800 bytes (~200 KB).
+ * RP2350 has 520 KB — still fine.
  *
  * Usage
  * -----
- *  1. Apply the 4 edits described in LCD_PATCH_INSTRUCTIONS.txt to lcd.c.
- *     After that, the framebuffer is kept in sync automatically — no
- *     changes needed anywhere else in your drawing code.
+ *  1. Apply the 4 edits in LCD_PATCH_INSTRUCTIONS.txt to lcd.c.
+ *     After that, the framebuffer stays in sync automatically.
  *
- *  2. Mount the SD card once at startup via f_mount() or the mount() shell
- *     command from sdcard.c.
+ *  2. Mount the SD card once at startup via f_mount() / mount().
  *
  *  3. From your FSM export state, call either:
  *       export_bmp("SCREEN.BMP")   -- 24-bit BMP, opens on any OS
@@ -33,57 +32,53 @@
  *     Both return FR_OK (0) on success.
  *
  *  FAT 8.3 filename rules apply (FF_USE_LFN == 0 in ffconf.h):
- *  max 8 chars before the dot, max 3 extension chars, no lowercase needed.
+ *  max 8 chars before the dot, max 3 extension chars.
  *===========================================================================*/
 
 #include <stdint.h>
-#include "ff.h"   /* FatFs */
-#include "lcd.h"  /* LCD_W, LCD_H, u16 */
+#include "ff.h"
+#include "lcd.h"   /* for lcddev, u16 */
 
 /*---------------------------------------------------------------------------
- * Shadow framebuffer
- *   framebuffer[y][x]  -- row-major, RGB565 big-endian (same byte order that
- *   LCD_WriteData16 sends: high byte first).
+ * Framebuffer — sized for the maximum possible dimension in either
+ * orientation (320 in both axes covers portrait and landscape).
+ * Active pixels are [0 .. lcddev.height-1][0 .. lcddev.width-1].
  *---------------------------------------------------------------------------*/
-#define FB_W  LCD_W   /* 240 */
-#define FB_H  LCD_H   /* 320 */
+#define FB_MAX  320   /* max of LCD_W and LCD_H */
 
-/* The actual buffer is defined in screen_export.c */
-extern uint16_t framebuffer[FB_H][FB_W];
+extern uint16_t framebuffer[FB_MAX][FB_MAX];
 
 /*---------------------------------------------------------------------------
- * fb_set_pixel()
- *   Call this every time you write a pixel to the display.
- *   color is the same RGB565 value you pass to LCD_DrawPoint().
+ * fb_set_pixel(x, y, color)
+ *   Mirror of a single pixel write to the display.
+ *   x/y are in display coordinates (i.e. the same values passed to
+ *   LCD_DrawPoint or LCD_SetWindow).
  *---------------------------------------------------------------------------*/
 static inline void fb_set_pixel(uint16_t x, uint16_t y, uint16_t color)
 {
-    if (x < FB_W && y < FB_H)
+    if (x < FB_MAX && y < FB_MAX)
         framebuffer[y][x] = color;
 }
 
 /*---------------------------------------------------------------------------
- * fb_clear()
- *   Mirror of LCD_Clear() — fills the entire framebuffer with one color.
+ * fb_clear(color)  —  fill the whole framebuffer with one color.
+ *   Call this alongside LCD_Clear().
  *---------------------------------------------------------------------------*/
 void fb_clear(uint16_t color);
 
 /*---------------------------------------------------------------------------
  * export_bmp(filename)
  *   Write a 24-bit uncompressed BMP to the SD card.
- *   Pixels are converted from RGB565 → RGB888 during export.
- *   BMP rows are stored bottom-up per spec, so we reverse row order here.
- *
- *   Returns FR_OK (0) on success, a FatFs FRESULT error code on failure.
+ *   Width and height are taken from lcddev.width / lcddev.height so the
+ *   export always matches the actual display orientation.
+ *   Returns FR_OK on success.
  *---------------------------------------------------------------------------*/
 FRESULT export_bmp(const char *filename);
 
 /*---------------------------------------------------------------------------
  * export_csv(filename)
- *   Write one line per pixel: "x,y,r,g,b\n"
- *   Values r/g/b are 8-bit (expanded from RGB565).
- *
- *   Returns FR_OK (0) on success, a FatFs FRESULT error code on failure.
+ *   Write "x,y,r,g,b\n" for every pixel in the active display region.
+ *   Returns FR_OK on success.
  *---------------------------------------------------------------------------*/
 FRESULT export_csv(const char *filename);
 

@@ -1,4 +1,4 @@
-// Padded and checksummed version of: C:\Users\conno\Documents\1purdue_spring_2026\ece362\ece362_raiders_of_the_lost_ad2\.pio\build\proton\boot2.bin
+// Padded and checksummed version of: C:\Users\rapha\OneDrive\Documents\36200\ece362_raiders_of_the_lost_ad2\.pio\build\proton\boot2.bin
 
 .cpu cortex-m0plus
 .thumb
